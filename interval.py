@@ -28,7 +28,7 @@ class getInterval:
 
 	def __init__(self):
 
-		self.intervalPub = rospy.Publisher('QtInstrument/interval', Int8, queue_size = 1)		
+		self.intervalPub = rospy.Publisher('/QTInstrument/interval', Int8, queue_size = 1)		
 	def findInterval(self):
 		if self.hands.rightHandPosition == None or self.hands.rightHandPosition[0] == -1:
 			return
@@ -36,6 +36,7 @@ class getInterval:
 			if self.intervalList[i] < self.hands.rightHandPosition[0] and self.hands.rightHandPosition[0] < self.intervalList[i+1]: #Compare the position of hand to the bonds of 12 equal zones
 				self.interval = i+1 #Registers the zone where hand is detected
 				print(self.interval)
+				self.intervalPub.publish(self.interval)
 				break
 			
 def main():
@@ -44,7 +45,7 @@ def main():
 
 	rospy.init_node("intervalNode", anonymous = True)
 	
-	rate = rospy.Rate(5)
+	rate = rospy.Rate(2.5)
 
 	try:
 		while not rospy.is_shutdown():
